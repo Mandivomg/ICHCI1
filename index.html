@@ -113,7 +113,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        #project-modal, #history-page {
+        #project-modal, #history-page, #board-page {
             transition: opacity 0.6s ease, visibility 0.6s;
         }
 
@@ -129,9 +129,46 @@
             transform: scale(0.98);
             pointer-events: none;
         }
+
+/* --- RIGHT SIDE LIQUID GLASS SCROLLBAR --- */
+        .custom-scroll-track {
+            position: fixed;
+            right: 25px; /* Moved to the right */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.02); /* Very faint glass track */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            z-index: 200;
+            display: none; 
+        }
+        @media (min-width: 768px) { .custom-scroll-track { display: block; } }
+
+        #custom-scroll-thumb {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1); /* Translucent White */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Defined glass edge */
+            border-radius: 100px;
+            box-shadow: 0 0 20px rgba(109, 40, 217, 0.15); /* Very soft purple glow */
+            transition: transform 0.1s ease-out;
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
+
+    <div class="custom-scroll-track">
+        <div id="custom-scroll-thumb"></div>
+    </div>
 
     <!-- SVG Filter for Liquid Behavior -->
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="hidden">
@@ -243,23 +280,60 @@
             </div>
         </div>
     </div>
+    <div id="board-page" class="fixed inset-0 z-[90] invisible opacity-0 bg-black overflow-y-auto p-6 md:p-12 flex flex-col items-center text-left">
+        <div class="w-full max-w-6xl flex justify-between items-center mb-10 md:mb-16">
+            <h1 class="text-3xl md:text-4xl font-bold apple-gradient-text">Board of Officials</h1>
+            <button onclick="toggleBoard(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">
+                ← Back Home
+            </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('pres')">
+                <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"><h4 class="text-xl font-bold">President</h4><p class="text-white/40 text-sm">Leading the club with passion and purpose for 2025/26.</p>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('sec')">
+                <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"><h4 class="text-xl font-bold">Secretary</h4><p class="text-white/40 text-sm">Managing club operations and communications.</p>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('treas')">
+                <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"><h4 class="text-xl font-bold">Treasurer</h4><p class="text-white/40 text-sm">Ensuring financial transparency.</p>
+            </div>
+        </div>
+    </div>
+    <!-- END OF BOARD PAGE CODE -->
 
     <!-- MAIN SITE CONTAINER -->
     <div id="main-site">
         <nav id="navbar" class="fixed top-0 w-full z-50 px-6 py-4">
             <div class="max-w-5xl mx-auto glass-card px-8 py-3 flex justify-between items-center rounded-full">
-                <!-- REVERTED LOGO FONT SIZE -->
+                <!-- Logo -->
                 <span class="text-xl font-semibold tracking-tight">Horizon <span class="text-purple-400">Interact</span></span>
-                <!-- REVERTED LINK STYLES (NO UPPERCASE) -->
+                
+                <!-- Desktop Links (PC) -->
                 <div class="hidden md:flex space-x-8 text-sm font-medium opacity-80">
                     <a href="#current" class="hover:text-purple-400 transition">Current</a>
                     <button onclick="toggleHistory(true)" class="hover:text-purple-400 transition">History</button>
+                    <button onclick="toggleBoard(true)" class="hover:text-purple-400 transition">Board</button>
                     <a href="#reserve" class="hover:text-purple-400 transition">Parcitipate</a>
                 </div>
-                <!-- REVERTED BUTTON STYLE -->
-                <button onclick="openModal('contact')" class="bg-white text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-purple-200 transition">Contact Us</button>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="openModal('contact')" class="bg-white text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-purple-200 transition">Contact Us</button>
+                    <!-- Mobile Menu Toggle Button (For Phones) -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-white focus:outline-none">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Dropdown (For Phones) -->
+            <div id="mobile-menu" class="md:hidden mt-2 glass-card mx-auto max-w-[200px] p-4 hidden flex-col space-y-4 text-center text-sm font-medium border-white/20">
+                <a href="#current" onclick="toggleMobileMenu()">Current</a>
+                <button onclick="toggleHistory(true); toggleMobileMenu()">History</button>
+                <button onclick="toggleBoard(true); toggleMobileMenu()">Board</button>
+                <a href="#reserve" onclick="toggleMobileMenu()">Participate</a>
             </div>
         </nav>
+
 
         <!-- Hero Section -->
         <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
@@ -311,33 +385,11 @@
             </div>
         </section>
 
-        <!-- Legacy Section -->
+        <!-- Legacy -->
         <section id="past" class="py-24 px-6 bg-white/5 backdrop-blur-3xl">
-            <div class="max-w-6xl mx-auto">
-                <div class="reveal text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Our Legacy</h2>
-                    <p class="opacity-60 text-sm">Impact from the past years of service.</p>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                    <div class="glass-card aspect-square flex items-center justify-center flex-col reveal text-center p-4">
-                        <span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span>
-                        <span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Projects</span>
-                    </div>
-                    <div class="glass-card aspect-square flex items-center justify-center flex-col reveal text-center p-4" style="transition-delay: 0.1s;">
-                        <span class="text-2xl md:text-4xl font-bold text-purple-400">500+</span>
-                        <span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Volunteers</span>
-                    </div>
-                    <div class="glass-card aspect-square flex items-center justify-center flex-col reveal text-center p-4" style="transition-delay: 0.2s;">
-                        <span class="text-2xl md:text-4xl font-bold text-purple-400">12 Years</span>
-                        <span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">service</span>
-                    </div>
-                    <div class="glass-card aspect-square flex items-center justify-center flex-col reveal text-center p-4" style="transition-delay: 0.3s;">
-                        <span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span>
-                        <span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Lifes changed</span>
-                    </div>
-                </div>
-            </div>
+            <div class="max-w-6xl mx-auto"><div class="reveal text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Our Legacy</h2></div><div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center"><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Projects</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">500+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Volunteers</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">12 Years</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Service</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Lifes Changed</span></div></div></div>
         </section>
+
 
         <!-- Reservation -->
         <section id="reserve" class="py-24 px-6 max-w-4xl mx-auto">
@@ -409,8 +461,10 @@
             'words': { title: "Words Without Borders", desc: "Language is more than just words — it reflects identity, preserves heritage, and builds bridges across cultures.<br>This seminar will explore how languages influence the global rise of English, cultural appropriation, endangered languages, and the importance of multilingualism in communication and participants will be encouraged to reflect on the power of language in shaping both personal and global understanding.", images: ["words.jpeg"], results: ["200kg waste.", "2km coastline."] },
             'paws': { title: "Paws of Hope", desc: "A heartwarming initiative by the Interact Clubs of Horizon College International, Malabe & D.S. Senanayake College, Colombo. <br> Together, we’re creating change, one paw at a time.", images: ["paws.jpeg"], results: ["200kg waste.", "2km coastline."] },
             'return': { title: "Return to Blue", desc: "A greenlife initiative aimed at releasing turtles back into their ocean habitat, learning about marine life alongside a visit to the aquarium, following a small knowledge session conducted by the Ahungalla Sea Turtles Conservation Project.", images: ["return.jpeg"], results: ["200kg waste.", "2km coastline."] },
-            'membership': { title: "Membership Drive", desc: "The Interact Club of Horizon College International is excited to announce that membership applications are now open!Join us to build friendships, create lasting memories, and make a meaningful impact in our community.", images: ["membership.jpeg"], results: ["200kg waste.", "2km coastline."] }
-
+            'membership': { title: "Membership Drive", desc: "The Interact Club of Horizon College International is excited to announce that membership applications are now open!Join us to build friendships, create lasting memories, and make a meaningful impact in our community.", images: ["membership.jpeg"], results: ["200kg waste.", "2km coastline."] },
+            pres: { title: "President", desc: "Leading the club vision for the 2025/26 term.", images: ["Board.jpeg"], results: ["Leadership", "Vision"] },
+            sec: { title: "Secretary", desc: "Managing documentation and logistical planning.", images: ["Board.jpeg"], results: ["Operations", "Management"] },
+            treas: { title: "Treasurer", desc: "Responsible for financial transparency and project funding.", images: ["Board.jpeg"], results: ["Finance", "Sustainability"] }
         };
 
         function toggleHistory(isActive) {
@@ -425,6 +479,19 @@
                 main.classList.remove('history-active');
                 history.classList.remove('opacity-100');
                 setTimeout(() => history.classList.add('invisible'), 600);
+            }
+        }
+        function toggleBoard(isActive) {
+            const board = document.getElementById('board-page');
+            if (isActive) {
+                document.body.classList.add('history-active');
+                board.classList.remove('invisible');
+                board.classList.add('opacity-100');
+                window.scrollTo(0, 0);
+            } else {
+                document.body.classList.remove('history-active');
+                board.classList.remove('opacity-100');
+                setTimeout(() => board.classList.add('invisible'), 600);
             }
         }
 
@@ -469,33 +536,31 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-        const lens = document.getElementById('interactive-lens');
-        const updatePointer = (e) => {
-            const x = e.clientX || (e.touches && e.touches[0].clientX);
-            const y = e.clientY || (e.touches && e.touches[0].clientY);
-            if (x && y) {
-                lens.style.left = `${x}px`; lens.style.top = `${y}px`;
-                const moveX = (x - window.innerWidth / 2) * 0.05;
-                const moveY = (y - window.innerHeight / 2) * 0.05;
-                document.querySelectorAll('.liquid-blob').forEach((blob, index) => {
-                    blob.style.transform = `translate(${moveX * (index + 1) * 0.5}px, ${moveY * (index + 1) * 0.5}px)`;
-                });
-            }
-        };
-        document.addEventListener('mousemove', updatePointer);
-        document.addEventListener('touchmove', updatePointer, { passive: true });
-
-        window.addEventListener('scroll', () => {
+window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const navbar = document.getElementById('navbar');
+            const thumb = document.getElementById('custom-scroll-thumb');
+            
+            // 1. Combined Parallax VFX Logic
             document.querySelectorAll('.blob-vfx').forEach((blob, i) => {
-                blob.style.transform = `translateY(${window.pageYOffset * (i + 1) * 0.1}px)`;
+                blob.style.transform = `translateY(${scrolled * (i + 1) * 0.1}px)`;
             });
-            const currentScrollY = window.pageYOffset;
-            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+
+            // 2. Smart Navbar Logic
+            if (scrolled > lastScrollY && scrolled > 80) {
                 navbar.classList.add('nav-hidden');
             } else {
                 navbar.classList.remove('nav-hidden');
             }
-            lastScrollY = currentScrollY;
+            lastScrollY = scrolled;
+
+            // 3. Liquid Glass Scroll Thumb Logic
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = scrolled / totalHeight;
+            // 180 (Track Height) - 40 (Thumb Height) = 140 max movement
+            const movement = progress * 140;
+            if(thumb) thumb.style.transform = `translateY(${movement}px)`;
+            
         }, { passive: true });
     </script>
 </body>
