@@ -24,17 +24,29 @@
             scroll-behavior: smooth;
         }
 
-        /* --- SMART NAVIGATION --- */
-        nav { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease; }
-        .nav-hidden { transform: translateY(-100%); opacity: 0; }
+        /* --- SMART NAVIGATION STYLES --- */
+        nav {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        }
+        .nav-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
 
+        /* --- MOBILE MENU ANIMATION --- */
         #mobile-menu {
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             transform: translateY(-20px);
             opacity: 0;
             pointer-events: none;
+            display: none; /* Default state */
         }
-        #mobile-menu.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        #mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+            display: flex !important;
+        }
 
         /* --- RIGHT SIDE LIQUID GLASS SCROLLBAR --- */
         .custom-scroll-track {
@@ -99,7 +111,9 @@
             pointer-events: none;
         }
 
-        @media (min-width: 768px) { #interactive-lens { width: 450px; height: 450px; } }
+        @media (min-width: 768px) {
+            #interactive-lens { width: 450px; height: 450px; }
+        }
 
         .liquid-blob {
             position: fixed; z-index: -2;
@@ -130,19 +144,38 @@
         }
         .glass-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.4); background: rgba(255, 255, 255, 0.05); }
 
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0, 0.2, 1); }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         ::-webkit-scrollbar { width: 0px; }
-        .apple-gradient-text { background: linear-gradient(180deg, #fff 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        #project-modal, #history-page, #board-page { transition: opacity 0.6s ease, visibility 0.6s; }
-        #modal-content { transform: translateY(50px); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .apple-gradient-text {
+            background: linear-gradient(180deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #project-modal, #history-page, #board-page {
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        #modal-content {
+            transform: translateY(50px);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         .modal-open #modal-content { transform: translateY(0); }
-        .modal-open { overflow: hidden; }
 
         #main-site { transition: opacity 0.6s ease, transform 0.6s ease; }
-        .subpage-active #main-site { opacity: 0; transform: scale(0.98); pointer-events: none; }
+        .history-active #main-site {
+            opacity: 0;
+            transform: scale(0.98);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
@@ -152,12 +185,17 @@
         <div id="custom-scroll-thumb"></div>
     </div>
 
-    <!-- SVG Filter -->
+    <!-- SVG Filter for Liquid Behavior -->
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="hidden">
-        <defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" /><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo" /><feBlend in="SourceGraphic" in2="goo" /></filter></defs>
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo" />
+                <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+        </defs>
     </svg>
 
-    <!-- Portal VFX -->
     <div class="portal-container">
         <div id="interactive-lens"></div>
         <div class="blob-vfx w-48 h-48 md:w-96 md:h-96 top-[-10%] left-[-5%]"></div>
@@ -165,89 +203,144 @@
         <div class="blob-vfx w-32 h-32 md:w-64 md:h-64 top-[40%] left-[30%]" style="background: #3b82f6;"></div>
     </div>
 
-    <!-- Background Blobs -->
     <div class="liquid-blob liquid-blob-1"></div>
     <div class="liquid-blob liquid-blob-2"></div>
 
-    <!-- Modal Overlay -->
+    <!-- Project Modal Overlay -->
     <div id="project-modal" class="fixed inset-0 z-[100] invisible opacity-0 flex items-center justify-center px-4 md:px-6">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-xl" onclick="closeModal()"></div>
         <div id="modal-content" class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-card p-6 md:p-12 border-white/20 shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-white/40 z-10"><i data-lucide="x"></i></button>
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white/40 hover:text-white transition z-10">
+                <i data-lucide="x"></i>
+            </button>
             <div id="modal-body" class="space-y-6 md:space-y-8"></div>
         </div>
     </div>
 
-    <!-- BOARD PAGE -->
-    <div id="board-page" class="fixed inset-0 z-[90] invisible opacity-0 bg-black overflow-y-auto p-6 md:p-12 flex flex-col items-center">
-        <div class="w-full max-w-6xl flex justify-between items-center mb-10 md:mb-16">
-            <h1 class="text-3xl md:text-4xl font-bold apple-gradient-text">Meet the Board of Officials</h1>
-            <button onclick="toggleBoard(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">← Back Home</button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl text-left">
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('pres')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">President</p> <h4 class="text-xl font-bold text-white">Int. Pasan Wanigasekara</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('sec')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Secretary</p> <h4 class="text-xl font-bold text-white">Int. Binuthi Caldera</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('treas')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Treasurer</p> <h4 class="text-xl font-bold text-white">Int. Abiru Tissera</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('teas1')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Treasurer</p> <h4 class="text-xl font-bold text-white">Int. Sadula Matara Arachchige</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('vp')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Vice President</p> <h4 class="text-xl font-bold text-white">Int. Chanuli Weerasinghe</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('saa')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Sargeant at Arms</p> <h4 class="text-xl font-bold text-white">Int. Sidas Muthukumarana</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('editor')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Editor</p> <h4 class="text-xl font-bold text-white">Int. Chenuli Amarasinghe</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('ceditor')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Editor</p> <h4 class="text-xl font-bold text-white">Int. Sanithu Dissanayake</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dc')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Community Service</p> <h4 class="text-xl font-bold text-white">Int. Suhas Dunusinghe</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adc')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Community Service</p> <h4 class="text-xl font-bold text-white">Int. Sheynil Hearath</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('df')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Finance</p> <h4 class="text-xl font-bold text-white">Int. Mandiv Perera</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adf')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Finance</p> <h4 class="text-xl font-bold text-white">Int. Thaarya Sheriffdeen</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dC')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Club Service</p> <h4 class="text-xl font-bold text-white">Int. Jessica Mathiaz</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adC')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Club Service</p> <h4 class="text-xl font-bold text-white">Int. Thilanya Hewapathirana</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dI')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of International Understanding</p> <h4 class="text-xl font-bold text-white">Int. Indeev Adikari</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adI')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of International Understanding</p> <h4 class="text-xl font-bold text-white">Int. Nethuki Mendis</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dG')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Greenlife</p> <h4 class="text-xl font-bold text-white">Int. Damiru Perera</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adG')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Greenlife</p> <h4 class="text-xl font-bold text-white">Int. Rehan Kuruppu Arachchi</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dp')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Public Relations</p> <h4 class="text-xl font-bold text-white">Int. Nethya Gunasekara</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adp')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Public Relations</p> <h4 class="text-xl font-bold text-white">Int. Thesandi Karunarathna</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-
-        </div>
-    </div>
-
-    <!-- HISTORY PAGE -->
+    <!-- HISTORY PAGE OVERLAY -->
     <div id="history-page" class="fixed inset-0 z-[90] invisible opacity-0 bg-black overflow-y-auto p-6 md:p-12 flex flex-col items-center">
         <div class="w-full max-w-6xl flex justify-between items-center mb-10 md:mb-16">
             <h1 class="text-3xl md:text-4xl font-bold apple-gradient-text">Project Archive</h1>
-            <button onclick="toggleHistory(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">← Back Home</button>
+            <button onclick="toggleHistory(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">
+                ← Back Home
+            </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl text-left">
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('flood')"><img src="Flood.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Beyond The Flood</h4><p class="text-white/40 text-xs">Flood Donation Drive</p></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('hope')"><img src="hope.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Day of Hope</h4><p class="text-white/40 text-xs">Support for families in need</p></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('Insto')"><img src="insto.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">12th Installation</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('smile')"><img src="smile.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Brighter Smiles 3.0</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('fright')"><img src="fright.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Fright Night 2.0</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('mojito')"><img src="mojito.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Mojito Mania</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('bragging')"><img src="bragging.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Bragging Rights</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('words')"><img src="words.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Words Without Borders</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('paws')"><img src="paws.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Paws of Hope</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('return')"><img src="return.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Return to Blue</h4></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('membership')"><img src="membership.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Membership Drive</h4></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('flood')">
+                <img src="Flood.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Beyond The Flood</h4>
+                <p class="text-white/40 text-sm">Flood Donation Drive</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">December 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('hope')">
+                <img src="hope.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Day of Hope</h4>
+                <p class="text-white/40 text-sm">Heartfelt initiative designed to support to families in need.</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">November 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('Insto')">
+                <img src="insto.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">12th Installation</h4>
+                <p class="text-white/40 text-sm">The Interact Club of Horizon College International proudly transitions to it's new leaders.</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">November 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('smile')">
+                <img src="smile.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Brighter Smiles 3.0</h4>
+                <p class="text-white/40 text-sm">Helping those in need at Apeksha Hospital</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('fright')">
+                <img src="fright.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Fright Night 2.0</h4>
+                <p class="text-white/40 text-sm">Halloween Carnival</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('mojito')">
+                <img src="mojito.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Mojito Mania</h4>
+                <p class="text-white/40 text-sm">Mojito Sale on Sports Meet day to raise funds and refresh athletes</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('bragging')">
+                <img src="bragging.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Bragging Rights</h4>
+                <p class="text-white/40 text-sm">Interact Sports Tournament featuring football, criket and basketball</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('words')">
+                <img src="words.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Words Without Borders</h4>
+                <p class="text-white/40 text-sm">A seminar which will explore how languages influence the global rise of English.</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('paws')">
+                <img src="paws.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Paws of Hope</h4>
+                <p class="text-white/40 text-sm">A heartwarming initiative by the Interact Clubs of Horizon College International, Malabe & D.S. Senanayake College, Colombo.</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>      
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('return')">
+                <img src="return.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Return to Blue</h4>
+                <p class="text-white/40 text-sm">A greenlife initiative aimed at releasing turtles back into their ocean habitat.</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>      
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('membership')">
+                <img src="membership.jpeg" class="w-full h-40 object-cover rounded-2xl">
+                <h4 class="text-xl font-bold">Membership Drive</h4>
+                <p class="text-white/40 text-sm">A greenlife initiative aimed at releasing turtles back into their ocean habitat.</p>
+                <span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>      
+            </div>
+        </div>
+    </div>
+    <div id="board-page" class="fixed inset-0 z-[90] invisible opacity-0 bg-black overflow-y-auto p-6 md:p-12 flex flex-col items-center text-left">
+        <div class="w-full max-w-6xl flex justify-between items-center mb-10 md:mb-16">
+            <h1 class="text-3xl md:text-4xl font-bold apple-gradient-text">Board of Officials</h1>
+            <button onclick="toggleBoard(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">
+                ← Back Home
+            </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('pres')">
+                <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"><h4 class="text-xl font-bold">President</h4><p class="text-white/40 text-sm">Leading the club with passion and purpose for 2025/26.</p>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('sec')">
+                <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"><h4 class="text-xl font-bold">Secretary</h4><p class="text-white/40 text-sm">Managing club operations and communications.</p>
+            </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('treas')">
+                <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"><h4 class="text-xl font-bold">Treasurer</h4><p class="text-white/40 text-sm">Ensuring financial transparency.</p>
+            </div>
         </div>
     </div>
 
     <!-- MAIN SITE CONTAINER -->
     <div id="main-site">
-        <nav id="navbar" class="fixed top-0 w-full z-50 px-4 md:px-6 py-4">
-            <div class="max-w-5xl mx-auto glass-card px-6 md:px-8 py-3 flex justify-between items-center rounded-full">
-                <span class="text-xl font-semibold tracking-tight">Horizon <span class="text-purple-400">Interact</span></span>
+        <nav id="navbar" class="fixed top-0 w-full z-50 px-6 py-4">
+            <div class="max-w-5xl mx-auto glass-card px-8 py-3 flex justify-between items-center rounded-full">
+                <!-- Logo -->
+                <span class="text-xl font-semibold tracking-tight">Horizon<span class="text-purple-400">Interact</span></span>
+                
+                <!-- Desktop Links (PC) -->
                 <div class="hidden md:flex space-x-8 text-sm font-medium opacity-80">
                     <a href="#current" onclick="closeAllPages()" class="hover:text-purple-400 transition">Current</a>
-                    <button onclick="toggleHistory(true)" class="hover:text-purple-400 transition">Archives</button>
+                    <button onclick="toggleHistory(true)" class="hover:text-purple-400 transition">History</button>
                     <button onclick="toggleBoard(true)" class="hover:text-purple-400 transition">Board</button>
                     <a href="#reserve" onclick="closeAllPages()" class="hover:text-purple-400 transition">Participate</a>
                 </div>
+                
                 <div class="flex items-center space-x-4">
                     <button onclick="openModal('contact')" class="bg-white text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-purple-200 transition">Contact Us</button>
-                    <button onclick="toggleMobileMenu()" class="md:hidden text-white focus:outline-none"><i data-lucide="menu"></i></button>
+                    <!-- Mobile Menu Toggle Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-white focus:outline-none">
+                        <i data-lucide="menu"></i>
+                    </button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden mt-2 glass-card mx-auto max-w-[200px] p-4 flex hidden flex-col space-y-4 text-center text-sm font-medium border-white/20">
+
+            <!-- Mobile Menu Dropdown -->
+            <div id="mobile-menu" class="md:hidden mt-2 glass-card mx-auto max-w-[200px] p-4 flex flex-col space-y-4 text-center text-sm font-medium border-white/20">
                 <a href="#current" onclick="closeAllPages(); toggleMobileMenu()">Current</a>
                 <button onclick="toggleHistory(true); toggleMobileMenu()">History</button>
                 <button onclick="toggleBoard(true); toggleMobileMenu()">Board</button>
@@ -255,25 +348,60 @@
             </div>
         </nav>
 
+
+        <!-- Hero Section -->
         <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
-            <div class="reveal"><h1 class="text-5xl md:text-8xl font-bold apple-gradient-text tracking-tighter leading-tight mb-6">Driven By Passion, <br> Rewound With Purpose.</h1><p class="text-lg md:text-xl opacity-60 max-w-2xl mx-auto font-light leading-relaxed">Designing a better tomorrow, one project at a time.</p></div>
+            <div class="reveal">
+                <h1 class="text-5xl md:text-8xl font-bold apple-gradient-text tracking-tighter leading-tight mb-6">
+                    Driven By Passion, 
+            <br>
+                Rewound With Purpose.
+                </h1>
+                <p class="text-lg md:text-xl opacity-60 max-w-2xl mx-auto font-light leading-relaxed">
+                    The Interact Club of Horizon College International. <br class="hidden md:block">
+                    Designing a better tomorrow, one project at a time.
+                </p>
+            </div>
         </section>
 
         <!-- Current Projects -->
         <section id="current" class="py-24 px-6 max-w-6xl mx-auto">
-            <div class="reveal mb-16"><h2 class="text-3xl md:text-4xl font-bold mb-4 text-white text-left">Current Projects</h2><div class="h-1 w-20 bg-purple-500 rounded-full"></div></div>
+            <div class="reveal mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white text-left">Current Projects</h2>
+                <div class="h-1 w-20 bg-purple-500 rounded-full"></div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                <div class="glass-card p-10 reveal" onclick="openModal('Timeline')"><i data-lucide="circle-dollar-sign" class="text-purple-400 mb-6 w-10 h-10"></i><h3 class="text-2xl font-semibold mb-4 text-white">TimeLine</h3><p class="opacity-60 font-light text-sm">Ongoing interact themed calendar sale initiative for 2026.</p></div>
-                <div class="glass-card p-10 reveal" onclick="openModal('band4band')"><i data-lucide="circle-dollar-sign" class="text-purple-400 mb-6 w-10 h-10"></i><h3 class="text-2xl font-semibold mb-4 text-white">Band4Band</h3><p class="opacity-60 font-light text-sm">Ongoing interact themed wristband initiative.</p></div>
-                <div class="glass-card p-10 reveal" onclick="openModal('Sunshine')"><i data-lucide="handshake" class="text-purple-400 mb-6 w-10 h-10"></i><h3 class="text-2xl font-semibold mb-4 text-white">Sunshine Seniors</h3><p class="opacity-60 font-light text-sm">Ongoing community service project to empower the elderly.</p></div>
-                <div class="glass-card p-10 reveal" onclick="openModal('Membership2')"><i data-lucide="gavel" class="text-purple-400 mb-6 w-10 h-10"></i><h3 class="text-2xl font-semibold mb-4 text-white">2nd Membership Drive</h3><p class="opacity-60 font-light text-sm">Ongoing club service project for new members.</p></div>
-                <div class="glass-card p-10 reveal" onclick="openModal('Roots')"><i data-lucide="tree-palm" class="text-purple-400 mb-6 w-10 h-10"></i><h3 class="text-2xl font-semibold mb-4 text-white">Roots to Glory</h3><p class="opacity-60 font-light text-sm">Ongoing greenlife initiative aimed at a greener future.</p></div>
+                <div class="glass-card p-10 reveal" onclick="openModal('Timeline')">
+                    <i data-lucide="circle-dollar-sign" class="text-purple-400 mb-6 w-10 h-10"></i>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">TimeLine</h3>
+                    <p class="opacity-60 font-light">Ongoing interact themed calendar sale initiative for 2026.</p>
+                </div>
+                <div class="glass-card p-10 reveal" style="transition-delay: 0.1s;" onclick="openModal('band4band')">
+                    <i data-lucide="circle-dollar-sign" class="text-purple-400 mb-6 w-10 h-10"></i>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Band4Band</h3>
+                    <p class="opacity-60 font-light">Ongoing interact themed wristband initiative.</p>
+                </div>
+                <div class="glass-card p-10 reveal" onclick="openModal('Sunshine')">
+                    <i data-lucide="handshake" class="text-purple-400 mb-6 w-10 h-10"></i>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Sunshine Seniors</h3>
+                    <p class="opacity-60 font-light">Ongoing community service project to empower the elderly.</p>
+                </div>
+                <div class="glass-card p-10 reveal" onclick="openModal('Membership2')">
+                    <i data-lucide="gavel" class="text-purple-400 mb-6 w-10 h-10"></i>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">2nd Membership Drive</h3>
+                    <p class="opacity-60 font-light">Ongoing club service project allowing members to formally be apart of interact.</p>
+                </div>
+                <div class="glass-card p-10 reveal" onclick="openModal('Roots')">
+                    <i data-lucide="tree-palm" class="text-purple-400 mb-6 w-10 h-10"></i>
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Roots to Glory</h3>
+                    <p class="opacity-60 font-light">Ongoing greenlife initiative aimed at a greener future.</p>
+                </div>
             </div>
         </section>
 
         <!-- Legacy -->
         <section id="past" class="py-24 px-6 bg-white/5 backdrop-blur-3xl">
-            <div class="max-w-6xl mx-auto"><div class="reveal text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Our Legacy</h2></div><div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center"><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Projects</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">500+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Volunteers</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">12 Years</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Service</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Lifes Changed</span></div></div></div>
+            <div class="max-w-6xl mx-auto"><div class="reveal text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Our Legacy</h2></div><div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center"><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Projects</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">500+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Volunteers</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">12 Years</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">service</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Lifes Changed</span></div></div></div>
         </section>
 
         <!-- Reservation -->
@@ -289,7 +417,7 @@
                         <option value="https://link-to-sunshine-seniors-form.com">Sunshine Seniors</option>
                         <option value="https://link-to-membership-form.com">Membership Drive</option>
                     </select>
-                    <button onclick="handleProjectRedirect()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-2xl transition shadow-xl shadow-purple-900/20">Request to join</button>
+                    <button onclick="handleProjectRedirect()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-2xl shadow-xl shadow-purple-900/20 transition">Request to join</button>
                 </div>
             </div>
         </section>
@@ -297,7 +425,7 @@
         <footer class="py-12 px-6 text-center border-t border-white/5">
             <div class="reveal flex flex-col items-center"><button onclick="openModal('contact')" class="bg-white text-black px-8 py-3 rounded-full text-xs font-bold hover:bg-purple-200 transition mb-8 shadow-lg">Contact Us</button>
                 <div class="flex justify-center space-x-6 mb-8"><a href="https://www.instagram.com/ichci.25" target="_blank" class="opacity-50 hover:opacity-100 transition"><i data-lucide="instagram"></i></a><a href="https://mail.google.com/mail/?view=cm&fs=1&to=ichci3220@gmail.com" target="_blank" class="opacity-50 hover:opacity-100 transition"><i data-lucide="mail"></i></a><a href="https://wa.me/+94773771535" target="_blank" class="opacity-50 hover:opacity-100 transition"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.414 0 .018 5.394 0 12.03c0 2.125.556 4.197 1.61 6.011L0 24l6.117-1.605a11.845 11.845 0 005.932 1.577h.005c6.632 0 12.029-5.398 12.032-12.034a11.82 11.82 0 00-3.525-8.455"/></svg></a></div>
-                <p class="text-xs opacity-30 uppercase tracking-widest">Interact Club of Horizon College International &copy; 2026</p>
+                <p class="text-xs opacity-30 uppercase tracking-widest">ICHCI &copy; 2026</p>
             </div>
         </footer>
     </div>
@@ -307,26 +435,23 @@
 
         // Data Storage
         const projectData = {
-            contact: { title: "Contact ICHCI", desc: "Reach out to us for collaborations and inquiries.", images: ["Board.jpeg"], results: ["Insta: @ichci.25", "Secretary: 0773771535"] },
-
             Timeline: { title: "Timeline", desc: "Plan your year with purpose using the Interact Desk Calendar. Designed to be practical, visually striking, and easy to use, it’s the perfect desk companion for students and professionals alike.", images: ["timeline.jpeg"], results: ["50 calendars.", "Design impact."] },
             band4band: { title: "Band4Band", desc: "Every Interact wristband you wear shows your support for our community projects and charitable initiatives. Wear the change, spread the impact, and be part of something bigger.", images: ["band4band.jpeg"], results: ["300 bands.", "Community support."] },
             Sunshine: { title: "Sunshine Seniors", desc: "An elderly care outreach initiative by the Interact Club of Horizon College International. A project dedicated to spreading warmth, dignity, and care by supporting and engaging with elderly residents at the Nimala Wickramasinghe Elders Home.", images: ["Sunshine.jpeg"], results: ["Care & Warmth", "Engagement."] },
             Membership2: { title: "2nd Membership Drive", desc: "We are excited to commence the second phase of our Membership Drive.", images: ["Member2.jpeg"], results: ["Growth", "Service."] },
             Roots: { title: "Roots To Glory", desc: "A GreenLife initiative by the Interact Club of Horizon College International in partnership with Project Iris. <br> A project built on growth, purpose, and the commitment to create a greener, more mindful future for everyone.", images: ["Roots.jpeg"], results: ["Growth", "Mindful Future."] },
-
+            contact: { title: "Contact ICHCI", desc: "Reach out to us for collaborations and inquiries.", images: ["Board.jpeg"], results: ["Insta: @ichci.25", "Secretary: 0773771535"] },
             flood: { title: "Beyond The Flood", desc: "An Initiative Project with the collaboration of the Interact Club of Bandaranayake College Gampaha and VSL Foundation to help the people who are suffering from floods.", images: ["Flood.jpeg"], results: ["Flood Relief", "Community Support."] },
             hope: { title: "Day of Hope", desc: "Under our Community Service Avenue, we’re preparing a heartfelt initiative designed to bring comfort, care, and support to families in need.", images: ["hope.jpeg"], results: ["Care", "Family Support."] },
             Insto: { title: "12th Installation", desc: "The Interact Club of Horizon College International proudly presents its 12th Installation Ceremony a celebration of leadership, dedication, and service above self.", images: ["insto.jpeg"], results: ["Leadership Transition", "Celebration."] },
             smile: { title: "Brighter Smiles 3.0", desc: "Brighter Smiles 3.0 — happening at Apeksha Hospital, Maharagama. <br> Together, we bring hope, care, and brighter smiles to those who need it most ✨", images: ["smile.jpeg"], results: ["Hospital Care", "Hope."] },
             fright: { title: "Fright Night 2.0", desc: "From haunted chills to thrilling games. The biggest Halloween Carnival at Horizon College International", images: ["fright.jpeg"], results: ["Halloween Event", "Carnival."] },
-            mojito: { title: "Mojito Mania", desc: "A refreshing Mojito sale hosted by the interact club during the annual Sports Meet", images: ["mojito.jpeg"], results: ["Funds raised", "Refreshment."] },
+            mojito: { title: "Mojito Mania", desc: "A refreshing Mojito sale hosted by the interact club during the annual Sports Meet", images: ["mojito.jpeg"], results: ["Fundraising", "Refreshment."] },
             bragging: { title: "Bragging Rights", desc: "Bragging Rights'25, where teamwork builds and the hunger for victory strives. Come and witness the glory in all it's might by participating or by cheering the participants on.", images: ["bragging.jpeg"], results: ["Sports Victory", "Teamwork."] },
             words: { title: "Words Without Borders", desc: "Language is more than just words — it reflects identity, preserves heritage, and builds bridges across cultures.<br>This seminar will explore how languages influence the global rise of English, cultural appropriation, endangered languages, and the importance of multilingualism in communication and participants will be encouraged to reflect on the power of language in shaping both personal and global understanding.", images: ["words.jpeg"], results: ["English rise", "Heritage."] },
             paws: { title: "Paws of Hope", desc: "A heartwarming initiative by the Interact Clubs of Horizon College International, Malabe & D.S. Senanayake College, Colombo. <br> Together, we’re creating change, one paw at a time.", images: ["paws.jpeg"], results: ["Animal Welfare", "Compassion."] },
             return: { title: "Return to Blue", desc: "A greenlife initiative aimed at releasing turtles back into their ocean habitat, learning about marine life alongside a visit to the aquarium, following a small knowledge session conducted by the Ahungalla Sea Turtles Conservation Project.", images: ["return.jpeg"], results: ["Marine Life", "Conservation."] },
             membership: { title: "Membership Drive", desc: "The Interact Club of Horizon College International is excited to announce that membership applications are now open! Join us to build friendships, create lasting memories, and make a meaningful impact in our community.", images: ["membership.jpeg"], results: ["Impact", "Friendships."] },
-
             pres: { title: "President", desc: "Leading the club vision and strategic growth for the 2025/26 term.", images: ["Board.jpeg"], results: ["Leadership", "Vision"] },
             sec: { title: "Secretary", desc: "Managing documentation and logistical planning.", images: ["Board.jpeg"], results: ["Operations", "Management"] },
             treas: { title: "Treasurer", desc: "Responsible for financial transparency and project funding.", images: ["Board.jpeg"], results: ["Finance", "Sustainability"] }
