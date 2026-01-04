@@ -24,33 +24,27 @@
             scroll-behavior: smooth;
         }
 
-        /* --- SMART NAVIGATION STYLES --- */
+        /* --- SMART NAVIGATION --- */
         nav { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease; }
         .nav-hidden { transform: translateY(-100%); opacity: 0; }
-
-        #mobile-menu {
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateY(-20px);
-            opacity: 0;
-            pointer-events: none;
-        }
+        #mobile-menu { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(-20px); opacity: 0; pointer-events: none; }
         #mobile-menu.active { transform: translateY(0); opacity: 1; pointer-events: auto; display: flex !important; }
 
-        /* --- RIGHT SIDE LIQUID GLASS SCROLLBAR --- */
+        /* --- DRAGGABLE GLASS SCROLLBAR --- */
         .custom-scroll-track {
             position: fixed;
-            right: 25px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             width: 8px;
-            height: 180px;
+            height: 200px;
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--border-glass);
             border-radius: 100px;
             z-index: 200;
             display: none; 
+            cursor: pointer;
         }
         @media (min-width: 768px) { .custom-scroll-track { display: block; } }
 
@@ -60,116 +54,57 @@
             left: 0;
             width: 100%;
             height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 100px;
             box-shadow: 0 0 20px rgba(109, 40, 217, 0.15);
-            transition: transform 0.1s ease-out;
+            transition: background 0.3s;
+            cursor: grab;
+            user-select: none;
         }
 
-        /* --- THE LIQUID PORTAL VFX --- */
-        .portal-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            filter: url(#goo); 
-            pointer-events: none;
-        }
+        /* --- VFX --- */
+        .portal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: url(#goo); pointer-events: none; }
+        .blob-vfx { position: absolute; background: linear-gradient(45deg, #4f46e5, #7c3aed); border-radius: 50%; filter: blur(40px); opacity: 0.5; pointer-events: none; }
+        #interactive-lens { position: absolute; width: 350px; height: 350px; background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%); transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1); z-index: 1; mix-blend-mode: screen; pointer-events: none; }
+        .liquid-blob { position: fixed; z-index: -2; filter: blur(80px); border-radius: 50%; opacity: 0.3; transition: transform 0.4s ease-out; pointer-events: none; }
+        .liquid-blob-1 { background-color: #4c1d95; top: -100px; left: -100px; width: 500px; height: 500px; }
+        .liquid-blob-2 { background-color: #1e1b4b; bottom: -50px; right: -50px; width: 400px; height: 400px; }
 
-        .blob-vfx {
-            position: absolute;
-            background: linear-gradient(45deg, #4f46e5, #7c3aed);
-            border-radius: 50%;
-            filter: blur(40px);
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        #interactive-lens {
-            position: absolute;
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
-            z-index: 1;
-            mix-blend-mode: screen;
-            pointer-events: none;
-        }
-
-        @media (min-width: 768px) { #interactive-lens { width: 450px; height: 450px; } }
-
-        .liquid-blob {
-            position: fixed; z-index: -2;
-            filter: blur(80px); border-radius: 50%;
-            opacity: 0.3;
-            transition: transform 0.4s ease-out; 
-            pointer-events: none;
-            will-change: transform;
-        }
-
-        @keyframes float-subtle {
-            0% { margin-top: 0px; margin-left: 0px; }
-            50% { margin-top: 50px; margin-left: 30px; }
-            100% { margin-top: -20px; margin-left: -20px; }
-        }
-
-        .liquid-blob-1 { background-color: #4c1d95; top: -100px; left: -100px; width: 500px; height: 500px; animation: float-subtle 20s infinite alternate; }
-        .liquid-blob-2 { background-color: #1e1b4b; bottom: -50px; right: -50px; width: 400px; height: 400px; animation: float-subtle 25s infinite alternate-reverse; }
-
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-glass);
-            border-radius: 32px;
-            transition: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
-            cursor: pointer;
-        }
+        /* --- UI ELEMENTS --- */
+        .glass-card { background: var(--glass); backdrop-filter: blur(16px); border: 1px solid var(--border-glass); border-radius: 32px; transition: all 0.4s cubic-bezier(0.2, 0, 0.2, 1); cursor: pointer; }
         .glass-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.4); background: rgba(255, 255, 255, 0.05); }
-
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
         ::-webkit-scrollbar { width: 0px; }
         .apple-gradient-text { background: linear-gradient(180deg, #fff 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        #project-modal, #history-page, #board-page { transition: opacity 0.6s ease, visibility 0.6s; }
+        /* --- SUBPAGE TRANSITIONS --- */
+        #project-modal, #history-page, #board-page, #custom-404-page { transition: opacity 0.6s ease, visibility 0.6s; }
         #modal-content { transform: translateY(50px); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-open #modal-content { transform: translateY(0); }
-        .modal-open { overflow: hidden; }
-
-        #main-site { transition: opacity 0.6s ease, transform 0.6s ease; }
         .subpage-active #main-site { opacity: 0; transform: scale(0.98); pointer-events: none; }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
 
-    <!-- Custom Scroll Indicator -->
-    <div class="custom-scroll-track">
-        <div id="custom-scroll-thumb"></div>
-    </div>
+    <div class="custom-scroll-track" id="scrollTrack"><div id="custom-scroll-thumb"></div></div>
 
-    <!-- SVG Filter -->
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="hidden">
         <defs><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" /><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo" /><feBlend in="SourceGraphic" in2="goo" /></filter></defs>
     </svg>
 
-    <!-- Portal VFX -->
+    <!-- VFX -->
     <div class="portal-container">
         <div id="interactive-lens"></div>
         <div class="blob-vfx w-48 h-48 md:w-96 md:h-96 top-[-10%] left-[-5%]"></div>
         <div class="blob-vfx w-64 h-64 md:w-[500px] md:h-[500px] bottom-[10%] right-[-10%] animate-pulse"></div>
-        <div class="blob-vfx w-32 h-32 md:w-64 md:h-64 top-[40%] left-[30%]" style="background: #3b82f6;"></div>
     </div>
-
-    <!-- Background Blobs -->
     <div class="liquid-blob liquid-blob-1"></div>
     <div class="liquid-blob liquid-blob-2"></div>
 
-    <!-- Modal Overlay -->
+    <!-- Modal -->
     <div id="project-modal" class="fixed inset-0 z-[100] invisible opacity-0 flex items-center justify-center px-4 md:px-6">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-xl" onclick="closeModal()"></div>
         <div id="modal-content" class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-card p-6 md:p-12 border-white/20 shadow-2xl">
@@ -178,11 +113,27 @@
         </div>
     </div>
 
+    <!-- CODED CUSTOM 404 -->
+    <div id="custom-404-page" class="fixed inset-0 z-[110] invisible opacity-0 bg-black flex flex-col items-center justify-center text-center p-6 overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-[120px] md:text-[220px] font-bold apple-gradient-text opacity-10 select-none leading-none">404</h1>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">Oops, I think we're Lost</h2>
+                <p class="text-white/40 max-w-md mx-auto mb-10 font-light text-sm md:text-base leading-relaxed text-center">It seems this project doesn't have a portal setup yet.<br>Lets get you back to somewhere familiar...</p>
+                <button onclick="toggle404(false)" class="glass-card px-8 py-3 rounded-full text-xs font-bold hover:bg-white hover:text-black transition flex items-center gap-2 border border-white/20 shadow-2xl">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Back Home
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- BOARD PAGE -->
-    <div id="board-page" class="fixed inset-0 z-[90] invisible opacity-0 bg-black overflow-y-auto p-6 md:p-12 flex flex-col items-center">
+    <div id="board-page" class="fixed inset-0 z-[90] invisible opacity-0 bg-black overflow-y-auto p-6 md:p-12 flex flex-col items-center text-left">
         <div class="w-full max-w-6xl flex justify-between items-center mb-10 md:mb-16">
-            <h1 class="text-3xl md:text-4xl font-bold apple-gradient-text">Meet the Board of Officials</h1>
-            <button onclick="toggleBoard(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">← Back Home</button>
+            <h1 class="text-3xl md:text-4xl font-bold apple-gradient-text">Board of Officials</h1>
+            <button onclick="toggleBoard(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">
+                ← Back Home
+            </button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl text-left">
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('pres')"> <img src="Pasan.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">President</p> <h4 class="text-xl font-bold text-white">Int. Pasan Wanigasekara</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
@@ -191,9 +142,9 @@
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('treas1')"> <img src="Sandula.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Treasurer</p> <h4 class="text-xl font-bold text-white">Int. Sadula Matara Arachchige</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('asec')"> <img src="minulya.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Secretary</p> <h4 class="text-xl font-bold text-white">Int. Minulya Yasawardana</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('vp')"> <img src="chanuli.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Vice President</p> <h4 class="text-xl font-bold text-white">Int. Chanuli Weerasinghe</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('saa')"> <img src="Sidas.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Sargeant at Arms</p> <h4 class="text-xl font-bold text-white">Int. Sidas Muthukumarana</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('saa')"> <img src="sidas.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Sargeant at Arms</p> <h4 class="text-xl font-bold text-white">Int. Sidas Muthukumarana</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('editor')"> <img src="chenuli.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Editor</p> <h4 class="text-xl font-bold text-white">Int. Chenuli Amarasinghe</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('ceditor')"> <img src="Board.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Editor</p> <h4 class="text-xl font-bold text-white">Int. Sanithu Dissanayake</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('ceditor')"> <img src="Sanithu.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Co-Editor</p> <h4 class="text-xl font-bold text-white">Int. Sanithu Dissanayake</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
 
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dc')"> <img src="suhas.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Community Service</p> <h4 class="text-xl font-bold text-white">Int. Suhas Dunusinghe</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adc')"> <img src="sheyni.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Community Service</p> <h4 class="text-xl font-bold text-white">Int. Sheynil Hearath</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
@@ -202,7 +153,7 @@
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dC')"> <img src="jessica.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Club Service</p> <h4 class="text-xl font-bold text-white">Int. Jessica Mathiaz</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adC')"> <img src="thil.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Club Service</p> <h4 class="text-xl font-bold text-white">Int. Thilanya Hewapathirana</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dI')"> <img src="indeev.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of International Understanding</p> <h4 class="text-xl font-bold text-white">Int. Indeev Adikari</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adI')"> <img src="Board.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of International Understanding</p> <h4 class="text-xl font-bold text-white">Int. Nethuki Mendis</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adI')"> <img src="nethuki.jpeg" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of International Understanding</p> <h4 class="text-xl font-bold text-white">Int. Nethuki Mendis</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dG')"> <img src="damiru.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Greenlife</p> <h4 class="text-xl font-bold text-white">Int. Damiru Perera</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('adG')"> <img src="rehan.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Asst. Director of Greenlife</p> <h4 class="text-xl font-bold text-white">Int. Rehan Kuruppu Arachchi</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('dp')"> <img src="nethya.JPG" class="w-full h-56 object-cover rounded-2xl"> <div class="flex flex-col gap-1"> <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Director of Public Relations</p> <h4 class="text-xl font-bold text-white">Int. Nethya Gunasekara</h4> <p class="text-white/40 text-sm leading-relaxed">Leading the club vision for the 25/26 term.</p> </div></div>
@@ -217,22 +168,22 @@
             <button onclick="toggleHistory(false)" class="glass-card px-6 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-black transition">← Back Home</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl text-left">
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('flood')"><img src="Flood.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Beyond The Flood</h4><p class="text-white/40 text-xs">Flood Donation Drive</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">December 2025</span></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('hope')"><img src="hope.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Day of Hope</h4><p class="text-white/40 text-xs">Heartfelt initiative designed to support to families in need.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">November 2025</span></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('flood')"><img src="Flood.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Beyond The Flood</h4><p class="text-white/40 text-sm">Flood Donation Drive</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">December 2025</span></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('hope')"><img src="hope.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Day of Hope</h4><p class="text-white/40 text-sm">Heartfelt initiative designed to support to families in need.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">November 2025</span></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('Insto')"><img src="insto.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">12th Installation</h4><p class="text-white/40 text-sm">The Interact Club of Horizon College International proudly transitions to it's new leaders.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">November 2025</span></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('smile')"><img src="smile.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Brighter Smiles 3.0</h4><p class="text-white/40 text-sm">Helping those in need at Apeksha Hospital</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">October 2025</span></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('fright')"><img src="fright.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Fright Night 2.0</h4><p class="text-white/40 text-sm">Halloween Carnival</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">October 2025</span></div>
             <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('mojito')"><img src="mojito.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Mojito Mania</h4><p class="text-white/40 text-sm">Mojito Sale on Sports Meet day to raise funds and refresh athletes</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">October 2025</span></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('bragging')"><img src="bragging.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Bragging Rights</h4><p class="text-white/40 text-sm">Interact Sports Tournament featuring football, criket and basketball</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">October 2025</span></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('words')"><img src="words.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Words Without Borders</h4><p class="text-white/40 text-sm">A seminar which will explore how languages influence the global rise of English.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">October 2025</span></div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('paws')"><img src="paws.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Paws of Hope</h4><p class="text-white/40 text-sm">A heartwarming initiative by the Interact Clubs of Horizon College International, Malabe & D.S. Senanayake College, Colombo.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>      </div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('return')"><img src="return.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Return to Blue</h4><p class="text-white/40 text-sm">A greenlife initiative aimed at releasing turtles back into their ocean habitat.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>      </div>
-            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('membership')"><img src="membership.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Membership Drive</h4><p class="text-white/40 text-sm">A greenlife initiative aimed at releasing turtles back into their ocean habitat.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">October 2025</span>      </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('bragging')"><img src="bragging.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Bragging Rights</h4><p class="text-white/40 text-sm">Interact Sports Tournament featuring football, criket and basketball</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">Not completed</span></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('words')"><img src="words.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Words Without Borders</h4><p class="text-white/40 text-sm">A seminar which will explore how languages influence the global rise of English.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 mt-auto">September 2025</span></div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('paws')"><img src="paws.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Paws of Hope</h4><p class="text-white/40 text-sm">A heartwarming initiative by the Interact Clubs of Horizon College International, Malabe & D.S. Senanayake College, Colombo.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">August 2025</span>      </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('return')"><img src="return.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Return to Blue</h4><p class="text-white/40 text-sm">A greenlife initiative aimed at releasing turtles back into their ocean habitat.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">August 2025</span>      </div>
+            <div class="glass-card p-6 flex flex-col gap-4" onclick="openModal('membership')"><img src="membership.jpeg" class="w-full h-40 object-cover rounded-2xl"><h4 class="text-xl font-bold text-white">Membership Drive</h4><p class="text-white/40 text-sm">A greenlife initiative aimed at releasing turtles back into their ocean habitat.</p><span class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mt-auto">August 2025</span>      </div>
         </div>
     </div>
 
 
-    <!-- MAIN SITE CONTAINER -->
+    <!-- MAIN SITE -->
     <div id="main-site">
         <nav id="navbar" class="fixed top-0 w-full z-50 px-4 md:px-6 py-4">
             <div class="max-w-5xl mx-auto glass-card px-6 md:px-8 py-3 flex justify-between items-center rounded-full">
@@ -248,7 +199,6 @@
                     <button onclick="toggleMobileMenu()" class="md:hidden text-white focus:outline-none"><i data-lucide="menu"></i></button>
                 </div>
             </div>
-            <!-- MOBILE MENU (HORIZONTAL LINE - SPACED OUT) -->
             <div id="mobile-menu" class="md:hidden mt-4 glass-card mx-4 p-4 hidden flex-row flex-wrap justify-center items-center gap-5 text-[11px] font-medium border-white/20">
                 <a href="#current" onclick="closeAllPages(); toggleMobileMenu()">Current</a>
                 <button onclick="toggleHistory(true); toggleMobileMenu()">History</button>
@@ -273,10 +223,9 @@
             </div>
         </section>
 
-        <!-- Legacy Section -->
+        <!-- Legacy Stats -->
         <section id="past" class="py-24 px-6 bg-white/5 backdrop-blur-3xl">
             <div class="max-w-6xl mx-auto"><div class="reveal text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Our Legacy</h2></div><div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center"><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Projects</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">500+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Volunteers</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">12 Years</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">service</span></div><div class="glass-card aspect-square flex flex-col items-center justify-center p-4"><span class="text-2xl md:text-4xl font-bold text-purple-400">100+</span><span class="text-[10px] opacity-50 uppercase tracking-widest mt-2">Lifes Changed</span></div></div>
-                <!-- ABOUT US BUTTON (FIXED POSITION) -->
                 <div class="flex justify-center mt-12 reveal">
                     <button onclick="openModal('about')" class="glass-card px-8 py-3 rounded-full text-sm font-medium hover:bg-white hover:text-black transition">About us</button>
                 </div>
@@ -286,15 +235,15 @@
         <!-- Reservation -->
         <section id="reserve" class="py-24 px-6 max-w-4xl mx-auto">
             <div class="glass-card p-12 reveal text-center border-purple-500/20">
-                <h2 class="text-3xl font-bold mb-6 text-white">Project Participation</h2>
+                <h2 class="text-3xl font-bold mb-6 text-white tracking-tight">Project Participation</h2>
                 <div class="grid gap-6 text-left">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><input type="text" placeholder="Name" class="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-purple-500 transition text-sm"><input type="email" placeholder="Email Address" class="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-purple-500 transition text-sm"></div>
                     <select id="projectSelect" class="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-purple-500 transition appearance-none text-white/50 text-sm">
                         <option value="">Select Project</option>
                         <option value="https://docs.google.com/forms/d/e/1FAIpQLScT2LOupHZOGfUOrnFXTaEaAtoJqsuQNw7p6YwXp-CyKczJ9g/viewform?usp=dialog">TimeLine</option>
-                        <option value="https://link-to-band4band-form.com">Band4Band</option>
-                        <option value="https://link-to-sunshine-seniors-form.com">Sunshine Seniors</option>
-                        <option value="https://link-to-membership-form.com">Membership Drive</option>
+                        <option value="non">Band4Band</option>
+                        <option value="non">Sunshine Seniors</option>
+                        <option value="non">Membership Drive</option>
                     </select>
                     <button onclick="handleProjectRedirect()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-2xl shadow-xl shadow-purple-900/20 transition">Request to join</button>
                 </div>
@@ -312,35 +261,53 @@
     <script>
         lucide.createIcons();
 
-        // Data Storage
+        // Tracker for which container is active
+        let activeScrollContainer = window; 
+
+        // Project Data
         const projectData = {
             contact: { title: "Contact ICHCI", desc: "Reach out to us for collaborations and inquiries.", images: ["Board.jpeg"], results: ["Insta: @ichci.25", "Secretary: 0773771535"] },
             about: { title: "About us", desc: "Established in 2014 under the guidance of the Rotary Club of Kolonnawa, the Interact Club of Horizon College International has actively contributed across all avenues of service through initiatives such as Project LiteReach and the Green Life Coastal Alliance. Under the leadership of President-Elect Int. Pasan Wanigasekera for the 2025/2026 term, the Club seeks to attain greater recognition within the Interact movement by promoting dedication and active member engagement under a unified theme.", images: ["Board.jpeg"], results: ["Youth Leadership", "Community Service", "Global Understanding", "Personal Development"] },
-            
-            Timeline: { title: "TimeLine", desc: "Plan your year with purpose using the Interact Desk Calendar. Designed to be practical, visually striking, and easy to use, it’s the perfect desk companion for students and professionals alike.", images: ["timeline.jpeg"], results: ["50 calendars.", "Design impact."] },
+            Timeline: { title: "Timeline", desc: "Plan your year with purpose using the Interact Desk Calendar. Designed to be practical, visually striking, and easy to use, it’s the perfect desk companion for students and professionals alike.", images: ["timeline.jpeg"], results: ["50 calendars.", "Design impact."] },
             band4band: { title: "Band4Band", desc: "Every Interact wristband you wear shows your support for our community projects and charitable initiatives. Wear the change, spread the impact, and be part of something bigger.", images: ["band4band.jpeg"], results: ["300 bands.", "Community support."] },
             Sunshine: { title: "Sunshine Seniors", desc: "An elderly care outreach initiative by the Interact Club of Horizon College International. A project dedicated to spreading warmth, dignity, and care by supporting and engaging with elderly residents at the Nimala Wickramasinghe Elders Home.", images: ["Sunshine.jpeg"], results: ["Care & Warmth", "Engagement."] },
             Membership2: { title: "2nd Membership Drive", desc: "We are excited to commence the second phase of our Membership Drive.", images: ["Member2.jpeg"], results: ["Growth", "Service."] },
             Roots: { title: "Roots To Glory", desc: "A GreenLife initiative by the Interact Club of Horizon College International in partnership with Project Iris. <br> A project built on growth, purpose, and the commitment to create a greener, more mindful future for everyone.", images: ["Roots.jpeg"], results: ["Growth", "Mindful Future."] },
-
             flood: { title: "Beyond The Flood", desc: "An Initiative Project with the collaboration of the Interact Club of Bandaranayake College Gampaha and VSL Foundation to help the people who are suffering from floods.", images: ["Flood.jpeg"], results: ["Flood Relief", "Community Support."] },
             hope: { title: "Day of Hope", desc: "Under our Community Service Avenue, we’re preparing a heartfelt initiative designed to bring comfort, care, and support to families in need.", images: ["hope.jpeg"], results: ["Care", "Family Support."] },
             Insto: { title: "12th Installation", desc: "The Interact Club of Horizon College International proudly presents its 12th Installation Ceremony a celebration of leadership, dedication, and service above self.", images: ["insto.jpeg"], results: ["Leadership Transition", "Celebration."] },
             smile: { title: "Brighter Smiles 3.0", desc: "Brighter Smiles 3.0 — happening at Apeksha Hospital, Maharagama. <br> Together, we bring hope, care, and brighter smiles to those who need it most ✨", images: ["smile.jpeg"], results: ["Hospital Care", "Hope."] },
-            fright: { title: "Fright Night 2.0", desc: "From haunted chills to thrilling games. The biggest Halloween Carnival at Horizon College International", images: ["fright.jpeg"], results: ["Halloween Event", "Carnival."] },
+            fright: { title: "Fright Night 2.0", desc: "From haunted chills to thrilling games. The biggest Halloween Carnival at Horizon College International", images: ["fright.jpeg"], results: ["Community", "Games."] },
             mojito: { title: "Mojito Mania", desc: "A refreshing Mojito sale hosted by the interact club during the annual Sports Meet", images: ["mojito.jpeg"], results: ["Fundraising", "Refreshment."] },
             bragging: { title: "Bragging Rights", desc: "Bragging Rights'25, where teamwork builds and the hunger for victory strives. Come and witness the glory in all it's might by participating or by cheering the participants on.", images: ["bragging.jpeg"], results: ["Sports Victory", "Teamwork."] },
             words: { title: "Words Without Borders", desc: "Language is more than just words — it reflects identity, preserves heritage, and builds bridges across cultures.<br>This seminar will explore how languages influence the global rise of English, cultural appropriation, endangered languages, and the importance of multilingualism in communication and participants will be encouraged to reflect on the power of language in shaping both personal and global understanding.", images: ["words.jpeg"], results: ["English rise", "Heritage."] },
             paws: { title: "Paws of Hope", desc: "A heartwarming initiative by the Interact Clubs of Horizon College International, Malabe & D.S. Senanayake College, Colombo. <br> Together, we’re creating change, one paw at a time.", images: ["paws.jpeg"], results: ["Animal Welfare", "Compassion."] },
             return: { title: "Return to Blue", desc: "A greenlife initiative aimed at releasing turtles back into their ocean habitat, learning about marine life alongside a visit to the aquarium, following a small knowledge session conducted by the Ahungalla Sea Turtles Conservation Project.", images: ["return.jpeg"], results: ["Marine Life", "Conservation."] },
             membership: { title: "Membership Drive", desc: "The Interact Club of Horizon College International is excited to announce that membership applications are now open! Join us to build friendships, create lasting memories, and make a meaningful impact in our community.", images: ["membership.jpeg"], results: ["Impact", "Friendships."] },
-
-            pres: { title: "President", desc: "Blud is built like a chopstick 💀", images: ["Pasan.JPG"], results: ["Leadership", "Vision"] },
-            sec: { title: "Secretary", desc: "Managing documentation ❌ <br> Loosing documentation ✅", images: ["Binuthi.jpeg"], results: ["Operations", "Management"] },
-            treas: { title: "Treasurer", desc: "Local Teddy Bear.", images: ["abiru.JPG"], results: ["Finance", "Sustainability"] },
-            treas1: { title: "Treasurer", desc: "how is bro related to a lawyer.", images: ["Sandula.JPG"], results: ["Finance", "Sustainability"] },
-            df: { title: "Director of Finance", desc: "I built this. <br> Brick by Brick.", images: ["aura.jpg"], results: ["Finance", "Aura Farming"] }
+            pres: { title: "President", desc: "Leading the club vision and strategic growth for the 25/26 term.", images: ["Pasan.JPG"], results: ["Leadership", "Vision"] },
+            sec: { title: "Secretary", desc: "Managing documentation and logistical planning.", images: ["Binuthi.jpeg"], results: ["Operations", "Logs"] },
+            treas: { title: "Treasurer", desc: "Responsible for financial transparency and sustainable funding.", images: ["abiru.JPG"], results: ["Finance", "Sustainability"] },
+            treas1: { title: "Treasurer", desc: "Budgeting and financial stewardship.", images: ["Sandula.JPG"], results: ["Transparency", "Stewardship"] },
+            df: { title: "Director of Finance", desc: "Responsible for club sponsorship and funding.", images: ["aura.jpg"], results: ["Finance", "Aura Farming"] }
         };
+
+        // Sync Scroll Thumb visuals
+        function syncScrollThumb() {
+            const thumb = document.getElementById('custom-scroll-thumb');
+            let scrolled, total;
+            if (activeScrollContainer === window) {
+                scrolled = window.pageYOffset;
+                total = document.documentElement.scrollHeight - window.innerHeight;
+            } else {
+                scrolled = activeScrollContainer.scrollTop;
+                total = activeScrollContainer.scrollHeight - activeScrollContainer.clientHeight;
+            }
+            if (total > 0) thumb.style.transform = `translateY(${(scrolled / total) * 140}px)`;
+        }
+
+        // Add wheel scroll listeners to subpages
+        document.getElementById('history-page').addEventListener('scroll', syncScrollThumb);
+        document.getElementById('board-page').addEventListener('scroll', syncScrollThumb);
 
         // UI Functions
         function closeAllPages() {
@@ -349,35 +316,55 @@
             document.getElementById('history-page').classList.remove('opacity-100');
             document.getElementById('board-page').classList.add('invisible');
             document.getElementById('board-page').classList.remove('opacity-100');
+            toggle404(false);
+            activeScrollContainer = window;
         }
 
-        function toggleHistory(isActive) { closeAllPages(); const h = document.getElementById('history-page'); if (isActive) { document.body.classList.add('subpage-active'); h.classList.remove('invisible'); h.classList.add('opacity-100'); window.scrollTo(0,0); } }
-        function toggleBoard(isActive) { closeAllPages(); const b = document.getElementById('board-page'); if (isActive) { document.body.classList.add('subpage-active'); b.classList.remove('invisible'); b.classList.add('opacity-100'); window.scrollTo(0,0); } }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('active');
+        function toggleHistory(isActive) { 
+            closeAllPages(); 
+            const h = document.getElementById('history-page'); 
+            if (isActive) { 
+                document.body.classList.add('subpage-active'); 
+                h.classList.remove('invisible'); 
+                h.classList.add('opacity-100'); 
+                window.scrollTo(0,0); 
+                activeScrollContainer = h;
+                syncScrollThumb();
+            } 
         }
 
-        function handleProjectRedirect() { const s = document.getElementById('projectSelect').value; if(!s) alert("Select a project"); else window.open(s, '_blank'); }
+        function toggleBoard(isActive) { 
+            closeAllPages(); 
+            const b = document.getElementById('board-page'); 
+            if (isActive) { 
+                document.body.classList.add('subpage-active'); 
+                b.classList.remove('invisible'); 
+                b.classList.add('opacity-100'); 
+                window.scrollTo(0,0); 
+                activeScrollContainer = b;
+                syncScrollThumb();
+            } 
+        }
+
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); document.getElementById('mobile-menu').classList.toggle('active'); }
+        function toggle404(isActive) { const p = document.getElementById('custom-404-page'); if (isActive) { p.classList.remove('invisible'); p.classList.add('opacity-100'); document.body.style.overflow = 'hidden'; } else { p.classList.remove('opacity-100'); document.body.style.overflow = ''; setTimeout(() => p.classList.add('invisible'), 600); } }
+
+        function handleProjectRedirect() { 
+            const s = document.getElementById('projectSelect').value; 
+            if(!s) alert("Select a project"); 
+            else if(s === "non") toggle404(true);
+            else window.open(s, '_blank'); 
+        }
 
         function openModal(id) {
             const p = projectData[id]; if(!p) return;
-            document.getElementById('modal-body').innerHTML = `
-                <div class="space-y-6">
-                    <h2 class="text-4xl font-bold apple-gradient-text tracking-tighter text-left">${p.title}</h2>
-                    <img src="${p.images[0]}" class="w-full h-48 md:h-96 rounded-3xl object-cover border border-white/10 shadow-2xl">
-                    <div class="grid md:grid-cols-3 gap-8 text-left">
-                        <div class="md:col-span-2"><h4 class="text-sm uppercase tracking-widest text-purple-400 font-semibold mb-4">Overview</h4><p class="text-white/60 leading-relaxed font-light text-lg">${p.desc}</p></div>
-                        <div class="bg-white/5 p-6 rounded-3xl border border-white/10 h-fit"><h4 class="text-sm uppercase tracking-widest text-purple-400 font-semibold mb-4">Impact List</h4><ul class="space-y-3 text-sm text-white/70">${p.results.map(r=>`<li class="flex gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-500"></i> ${r}</li>`).join('')}</ul></div>
-                    </div>
-                </div>`;
-            const m = document.getElementById('project-modal'); m.classList.remove('invisible'); m.classList.add('opacity-100'); document.body.classList.add('modal-open'); lucide.createIcons();
+            document.getElementById('modal-body').innerHTML = `<h2 class="text-4xl font-bold apple-gradient-text tracking-tighter text-left">${p.title}</h2><img src="${p.images[0]}" class="w-full h-48 md:h-96 rounded-3xl object-cover border border-white/10 shadow-2xl"><div class="grid md:grid-cols-3 gap-8 text-left"><div class="md:col-span-2"><h4 class="text-sm uppercase tracking-widest text-purple-400 font-semibold mb-4">Overview</h4><p class="text-white/60 leading-relaxed font-light text-lg">${p.desc}</p></div><div class="bg-white/5 p-6 rounded-3xl border border-white/10 h-fit"><h4 class="text-sm uppercase tracking-widest text-purple-400 font-semibold mb-4">Impact List</h4><ul class="space-y-3 text-sm text-white/70">${p.results.map(r=>`<li class="flex gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-500"></i> ${r}</li>`).join('')}</ul></div></div>`;
+            document.getElementById('project-modal').classList.remove('invisible'); document.getElementById('project-modal').classList.add('opacity-100'); document.body.classList.add('modal-open'); lucide.createIcons();
         }
 
         function closeModal() { document.getElementById('project-modal').classList.remove('opacity-100'); document.body.classList.remove('modal-open'); setTimeout(() => document.getElementById('project-modal').classList.add('invisible'), 500); }
 
+        // Interaction Logic
         const lens = document.getElementById('interactive-lens');
         let lastScrollY = window.pageYOffset;
         const updatePointer = (e) => {
@@ -391,21 +378,43 @@
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const n = document.getElementById('navbar');
-            const thumb = document.getElementById('custom-scroll-thumb');
             document.querySelectorAll('.blob-vfx').forEach((blob, i) => { blob.style.transform = `translateY(${scrolled * (i + 1) * 0.1}px)`; });
             if (scrolled > lastScrollY && scrolled > 80) n.classList.add('nav-hidden');
             else n.classList.remove('nav-hidden');
             lastScrollY = scrolled;
-            const h = document.documentElement.scrollHeight - window.innerHeight;
-            if(thumb && h > 0) thumb.style.transform = `translateY(${(scrolled / h) * 140}px)`;
+            syncScrollThumb();
         }, { passive: true });
 
         const observer = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }), { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // DRAG TO SCROLL LOGIC
+        let isDragging = false;
+        const scrollThumb = document.getElementById('custom-scroll-thumb');
+        const scrollTrack = document.getElementById('scrollTrack');
+
+        scrollThumb.addEventListener('mousedown', () => { isDragging = true; document.body.style.userSelect = 'none'; });
+        document.addEventListener('mouseup', () => { isDragging = false; document.body.style.userSelect = ''; });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const trackRect = scrollTrack.getBoundingClientRect();
+            let y = e.clientY - trackRect.top;
+            y = Math.max(0, Math.min(y, trackRect.height - scrollThumb.offsetHeight));
+            const percentage = y / (trackRect.height - scrollThumb.offsetHeight);
+
+            const totalScrollable = (activeScrollContainer === window) 
+                ? (document.documentElement.scrollHeight - window.innerHeight)
+                : (activeScrollContainer.scrollHeight - activeScrollContainer.clientHeight);
+
+            const scrollTarget = percentage * totalScrollable;
+
+            if (activeScrollContainer === window) {
+                window.scrollTo({ top: scrollTarget, behavior: 'auto' });
+            } else {
+                activeScrollContainer.scrollTop = scrollTarget;
+            }
+        });
     </script>
 </body>
 </html>
-
-
-
-
